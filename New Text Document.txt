@@ -1,0 +1,18 @@
+error with docker build stage of CodeBuild build
+
+
+
+I am getting the following error from the BUILD stage of my CodeBuild build process:
+
+"Error while executing command: docker build -t ..." Reason: exit status 1
+
+ codebuild-java-db-models-push-to-maven-service-role
+
+
+GitHub repository
+https://github.com/pieeyeinc/connector-runner.git
+
+https://github.com/<user-name>/<repository-name>
+
+Current environment image
+aws/codebuild/amazonlinux2-x86_64-standard:3.0
