@@ -1,0 +1,36 @@
+version: 0.2
+env:
+  parameter-store:
+    NPM_TOKEN: /CodeBuild/npmrc
+  exported-variables:
+    - NPM_TOKEN
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12
+      docker: 19
+    commands:
+      # Install dependencies needed for running tests
+      - yum install -y util-linux sudo nc
+      # - sudo amazon-linux-extras install docker
+      - docker ps
+      - npm install -g serverless
+      - aws codeartifact login --tool npm --repository npm --domain pieeye --domain-owner 006396608450 --region us-east-2
+      - npm install
+      - mkdir pgdata
+      - docker run --name pg -p 5432:5432 -e POSTGRES_PASSWORD=pgpassword -e POSTGRES_USER=postgres -e PGDATA=/var/lib/postgresql/data/pgdata -e POSTGRES_INITDB_ARGS="--auth-host=md5 --auth-local=md5" -v pgdata:/var/lib/postgresql/data -d postgres:12.7
+      - docker ps
+      - while ! psql postgres://postgres:pgpassword@127.0.0.1:5432/postgres -c 'SELECT 1+1;'; do sleep 1; done;
+      - psql postgres://postgres:pgpassword@127.0.0.1:5432/postgres -a -f node_modules/@piiai/sequelize-models/sql/schema.sql
+      - psql postgres://postgres:pgpassword@127.0.0.1:5432/postgres -a -f node_modules/@piiai/sequelize-models/sql/master.sql
+      - psql postgres://postgres:pgpassword@127.0.0.1:5432/postgres -a -f node_modules/@piiai/sequelize-models/sql/query.data.sql
+  build:
+    commands:
+      - make test
+      - make deploy_dev
+  post_build:
+    commands:
+      # - cat /root/.npm/_logs/*.log
+cache:
+  paths:
+    - 'node_modules/**/*'
