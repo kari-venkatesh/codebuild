@@ -1,0 +1,31 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::dev.privacyfor.me",
+                "arn:aws:s3:::dev.privacyfor.me/*"
+            ]
+        },
+        {
+            "Sid": "2",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity EMVJN7EEM5UKU"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::dev.privacyfor.me/*"
+        }
+    ]
+}
+
+
+
+	access-identity-dev.privacyfor.me.s3.amazonaws.com

@@ -1,0 +1,23 @@
+version: 0.2
+env:
+  variables:
+    DeployBucket: app.dev.pii.ai
+phases:
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - npm install
+  build:
+    commands:
+      - echo Build started on `date`
+      - npm run build:stage
+  post_build:
+    commands:
+      # copy the contents of /build to S3
+      - aws s3 --region us-east-2 sync ./dist s3://${DeployBucket}/
+      # set the cache-control headers for index.html to prevent
+      # browser caching
+# artifacts:
+#   files:
+#     - '**/*'
+#   base-directory: 'dist'

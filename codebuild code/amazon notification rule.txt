@@ -1,0 +1,6 @@
+connector-runner-slack
+
+
+choose target:-arn:aws:chatbot::006396608450:chat-configuration/slack-channel/env-dev
+
+target type:-aws chatbot(slack)
